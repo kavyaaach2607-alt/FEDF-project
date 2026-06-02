@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Give a Life – Create Account</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rose:#e8444d;--rose-light:#fdf2f3;--rose-dark:#b8333b;
+    --navy:#1a2340;--navy-mid:#2a3556;--slate:#4a5578;
+    --muted:#7a859a;--border:#e4e8f0;--bg:#f9fafc;
+    --white:#ffffff;--green:#1a9e6a;--green-light:#edf8f4;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:'DM Sans',sans-serif;min-height:100vh;
+    display:flex;flex-direction:column;
+    background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);
+    position:relative;overflow-x:hidden;
+  }
+  body::before{
+    content:'';position:fixed;inset:0;pointer-events:none;
+    background:radial-gradient(ellipse 60% 80% at 20% 50%,rgba(232,68,77,0.15) 0%,transparent 70%);
+  }
+  .deco{position:fixed;border-radius:50%;border:1px solid rgba(255,255,255,0.05);pointer-events:none;}
+  .deco-1{width:300px;height:300px;top:-80px;right:-80px;}
+  .deco-2{width:500px;height:500px;bottom:-150px;left:-150px;}
+  .deco-3{width:180px;height:180px;top:30%;right:5%;border-color:rgba(232,68,77,0.08);}
+
+  /* HEADER */
+  .site-header{position:relative;z-index:10;padding:0 24px;}
+  .header-inner{
+    max-width:1160px;margin:0 auto;
+    display:flex;align-items:center;justify-content:space-between;
+    height:68px;border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+  .logo{display:flex;align-items:center;gap:12px;text-decoration:none;}
+  .logo-icon{
+    width:40px;height:40px;
+    background:linear-gradient(135deg,var(--rose),var(--rose-dark));
+    border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;
+  }
+  .logo-text{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--white);}
+  .logo-text span{color:#f9a8ad;}
+  .header-right{font-size:13px;color:rgba(255,255,255,0.45);}
+  .header-right a{color:#f9a8ad;font-weight:600;text-decoration:none;}
+  .header-right a:hover{color:var(--white);}
+
+  /* WRAP */
+  .auth-wrap{
+    flex:1;display:flex;align-items:center;justify-content:center;
+    padding:40px 24px;position:relative;z-index:1;
+  }
+
+  /* CARD */
+  .auth-card{
+    background:var(--white);border-radius:20px;
+    box-shadow:0 24px 80px rgba(0,0,0,0.35);
+    width:100%;max-width:480px;overflow:hidden;
+    animation:fadeUp 0.4s ease;
+  }
+  @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+  .card-top{
+    background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);
+    padding:28px 32px 24px;text-align:center;position:relative;overflow:hidden;
+  }
+  .card-top::before{
+    content:'';position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(ellipse 80% 80% at 30% 120%,rgba(232,68,77,0.2) 0%,transparent 70%);
+  }
+  .card-top .heart-icon{font-size:32px;display:block;margin-bottom:8px;position:relative;z-index:1;}
+  .card-top h1{
+    font-family:'Playfair Display',serif;font-size:24px;font-weight:700;
+    color:var(--white);margin-bottom:4px;position:relative;z-index:1;
+  }
+  .card-top h1 em{color:#f9a8ad;font-style:normal;}
+  .card-top p{font-size:13px;color:rgba(255,255,255,0.5);position:relative;z-index:1;}
+
+  /* PROGRESS STEPS */
+  .steps-bar{
+    display:flex;align-items:center;justify-content:center;
+    padding:18px 32px;border-bottom:1px solid var(--border);gap:0;
+  }
+  .step-item{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;}
+  .step-num{
+    width:26px;height:26px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;
+    background:var(--bg);border:2px solid var(--border);color:var(--muted);flex-shrink:0;
+    transition:all 0.3s;
+  }
+  .step-item.active .step-num{background:var(--rose);border-color:var(--rose);color:var(--white);}
+  .step-item.done .step-num{background:var(--green);border-color:var(--green);color:var(--white);}
+  .step-item.active .step-lbl{color:var(--navy);}
+  .step-lbl{color:var(--muted);transition:color 0.3s;}
+  .step-connector{flex:1;height:1px;background:var(--border);margin:0 10px;max-width:40px;}
+
+  /* FORM */
+  .card-body{padding:28px 32px;}
+
+  .panel{display:none;}
+  .panel.active{display:block;}
+
+  .form-group{margin-bottom:15px;}
+  .form-group label{
+    display:block;font-size:11.5px;font-weight:600;color:var(--slate);
+    margin-bottom:5px;text-transform:uppercase;letter-spacing:0.5px;
+  }
+  .form-group label .req{color:var(--rose);margin-left:2px;}
+  .input-wrap{position:relative;}
+  .input-wrap .input-icon{
+    position:absolute;left:12px;top:50%;transform:translateY(-50%);
+    font-size:16px;pointer-events:none;
+  }
+  .input-wrap input,.input-wrap select{
+    width:100%;padding:11px 12px 11px 38px;
+    border:1.5px solid var(--border);border-radius:8px;
+    font-size:14px;font-family:inherit;color:var(--navy);background:var(--bg);transition:all 0.2s;
+  }
+  .input-wrap input:focus,.input-wrap select:focus{
+    outline:none;border-color:var(--rose);background:var(--white);
+    box-shadow:0 0 0 3px rgba(232,68,77,0.08);
+  }
+  .input-wrap .toggle-pw{
+    position:absolute;right:12px;top:50%;transform:translateY(-50%);
+    background:none;border:none;cursor:pointer;font-size:15px;color:var(--muted);padding:0;
+  }
+  .form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+
+  /* password strength */
+  .strength-bar{display:flex;gap:4px;margin-top:6px;}
+  .strength-seg{height:3px;flex:1;border-radius:2px;background:var(--border);transition:background 0.3s;}
+  .strength-seg.weak{background:var(--rose);}
+  .strength-seg.fair{background:#f59e0b;}
+  .strength-seg.strong{background:var(--green);}
+  .strength-label{font-size:11px;color:var(--muted);margin-top:3px;}
+
+  /* consent */
+  .consent-row{
+    display:flex;align-items:flex-start;gap:10px;
+    margin-bottom:16px;font-size:12.5px;color:var(--slate);line-height:1.55;
+  }
+  .consent-row input[type=checkbox]{accent-color:var(--rose);width:15px;height:15px;flex-shrink:0;margin-top:2px;}
+  .consent-row a{color:var(--rose);text-decoration:none;font-weight:600;}
+
+  /* nav buttons */
+  .btn-row{display:flex;gap:10px;margin-top:4px;}
+  .btn-back{
+    flex:0 0 auto;background:var(--bg);color:var(--slate);
+    border:1.5px solid var(--border);padding:13px 20px;font-size:14px;font-weight:600;
+    border-radius:8px;cursor:pointer;font-family:inherit;transition:all 0.2s;
+  }
+  .btn-back:hover{border-color:var(--slate);}
+  .submit-btn{
+    flex:1;background:var(--rose);color:#fff;border:none;
+    padding:13px;font-size:15px;font-weight:600;border-radius:8px;
+    cursor:pointer;font-family:inherit;transition:all 0.2s;
+    box-shadow:0 4px 16px rgba(232,68,77,0.35);
+    display:flex;align-items:center;justify-content:center;gap:8px;
+  }
+  .submit-btn:hover{background:var(--rose-dark);transform:translateY(-1px);}
+  .submit-btn:active{transform:none;}
+  .submit-btn:disabled{opacity:0.7;cursor:not-allowed;transform:none;}
+
+  /* Banners */
+  .error-banner,.success-banner{
+    border-radius:8px;padding:11px 14px;margin-bottom:14px;
+    font-size:13px;font-weight:500;display:none;align-items:center;gap:10px;
+  }
+  .error-banner{background:var(--rose-light);border:1px solid rgba(232,68,77,0.2);color:var(--rose-dark);}
+  .success-banner{background:var(--green-light);border:1px solid rgba(26,158,106,0.25);color:var(--green);}
+  .error-banner.show,.success-banner.show{display:flex;}
+
+  .signin-prompt{
+    margin-top:18px;padding:14px;background:var(--bg);
+    border-radius:10px;border:1px solid var(--border);
+    text-align:center;font-size:13px;color:var(--muted);
+  }
+  .signin-prompt a{color:var(--rose);font-weight:700;text-decoration:none;}
+  .signin-prompt a:hover{color:var(--rose-dark);}
+
+  /* FOOTER */
+  footer{
+    position:relative;z-index:1;color:rgba(255,255,255,0.25);
+    text-align:center;padding:18px 24px;font-size:12px;
+    border-top:1px solid rgba(255,255,255,0.06);
+  }
+  footer a{color:rgba(255,255,255,0.35);text-decoration:none;margin:0 8px;}
+  footer a:hover{color:rgba(255,255,255,0.65);}
+</style>
+</head>
+<body>
+
+<div class="deco deco-1"></div>
+<div class="deco deco-2"></div>
+<div class="deco deco-3"></div>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="GiveLife - Home Page.html" class="logo">
+      <div class="logo-icon">🫀</div>
+      <div class="logo-text">Give a <span>Life</span></div>
+    </a>
+  </div>
+</header>
+
+<div class="auth-wrap">
+  <div class="auth-card">
+
+    <div class="card-top">
+      <span class="heart-icon">❤️</span>
+      <h1>Become a <em>donor</em></h1>
+      <p>Create your account and pledge your organs to save lives</p>
+    </div>
+
+    <!-- STEP PROGRESS -->
+    <div class="steps-bar">
+      <div class="step-item active" id="si-1">
+        <div class="step-num" id="sn-1">1</div>
+        <span class="step-lbl">Personal Info</span>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item" id="si-2">
+        <div class="step-num" id="sn-2">2</div>
+        <span class="step-lbl">Account Setup</span>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <div class="error-banner" id="err-banner"><span>⚠️</span> <span id="err-msg">Please fill in all required fields.</span></div>
+      <div class="success-banner" id="ok-banner"><span>✅</span> Account created! Redirecting to home…</div>
+
+      <!-- STEP 1: Personal Info -->
+      <div class="panel active" id="panel-1">
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>First Name <span class="req">*</span></label>
+            <div class="input-wrap">
+              <span class="input-icon">👤</span>
+              <input type="text" id="su-fname" placeholder="First Name" autocomplete="given-name">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Last Name <span class="req">*</span></label>
+            <div class="input-wrap">
+              <span class="input-icon">👤</span>
+              <input type="text" id="su-lname" placeholder="Last Name" autocomplete="family-name">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Date of Birth <span class="req">*</span></label>
+            <div class="input-wrap">
+              <span class="input-icon">📅</span>
+              <input type="date" id="su-dob" style="padding-left:38px">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Gender <span class="req">*</span></label>
+            <div class="input-wrap">
+              <span class="input-icon">🪪</span>
+              <select id="su-gender">
+                <option value="">Select</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Mobile Number</label>
+          <div class="input-wrap">
+            <span class="input-icon">📱</span>
+            <input type="tel" id="su-mobile" >
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>State <span class="req">*</span></label>
+          <div class="input-wrap">
+            <span class="input-icon">📍</span>
+            <select id="su-state">
+              <option value="">Select state</option>
+              <option>Andhra Pradesh</option><option>Assam</option><option>Bihar</option>
+              <option>Delhi</option><option>Gujarat</option><option>Karnataka</option>
+              <option>Kerala</option><option>Madhya Pradesh</option><option>Maharashtra</option>
+              <option>Punjab</option><option>Rajasthan</option><option>Tamil Nadu</option>
+              <option>Telangana</option><option>Uttar Pradesh</option><option>West Bengal</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="submit-btn" onclick="goStep2()">Next &nbsp;→</button>
+        </div>
+
+        <div class="signin-prompt">
+          Already have an account? <a href="GiveLife - Login Page.html">Sign in here</a>
+        </div>
+      </div>
+
+      <!-- STEP 2: Account Setup -->
+      <div class="panel" id="panel-2">
+        <div class="form-group">
+          <label>Email Address <span class="req">*</span></label>
+          <div class="input-wrap">
+            <span class="input-icon">✉️</span>
+            <input type="email" id="su-email" placeholder="you@example.com" autocomplete="email">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Password <span class="req">*</span></label>
+          <div class="input-wrap">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="su-pw" placeholder="Min. 8 characters" oninput="checkStrength(this.value)" autocomplete="new-password">
+            <button class="toggle-pw" onclick="togglePw('su-pw',this)" tabindex="-1">👁</button>
+          </div>
+          <div class="strength-bar">
+            <div class="strength-seg" id="seg1"></div>
+            <div class="strength-seg" id="seg2"></div>
+            <div class="strength-seg" id="seg3"></div>
+            <div class="strength-seg" id="seg4"></div>
+          </div>
+          <div class="strength-label" id="strength-label"></div>
+        </div>
+
+        <div class="form-group">
+          <label>Confirm Password <span class="req">*</span></label>
+          <div class="input-wrap">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="su-pw2" placeholder="Re-enter password" autocomplete="new-password">
+            <button class="toggle-pw" onclick="togglePw('su-pw2',this)" tabindex="-1">👁</button>
+          </div>
+        </div>
+
+        <div class="consent-row">
+          <input type="checkbox" id="su-consent">
+          <label for="su-consent">
+            I agree to the <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a>.
+            I consent to my organ donation pledge being registered with NOTTO.
+          </label>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-back" onclick="goStep1()">← Back</button>
+          <button class="submit-btn" id="signup-btn" onclick="doSignup()">
+            Create Account ❤️
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<footer>
+  Ministry of Health &amp; Family Welfare · Govt. of India &nbsp;|&nbsp; DGHS · NOTTO · THOTA 1994<br>
+  <a href="#">Privacy Policy</a><a href="#">Terms</a><a href="#">Accessibility</a><a href="#">Contact</a>
+</footer>
+
+<script>
+  function goStep2() {
+    const fname = document.getElementById('su-fname').value.trim();
+    const lname = document.getElementById('su-lname').value.trim();
+    const dob   = document.getElementById('su-dob').value;
+    const gen   = document.getElementById('su-gender').value;
+    const state = document.getElementById('su-state').value;
+    const errEl = document.getElementById('err-banner');
+    errEl.classList.remove('show');
+    if (!fname || !lname || !dob || !gen || !state) {
+      document.getElementById('err-msg').textContent = 'Please fill in all required fields.';
+      errEl.classList.add('show'); return;
+    }
+    // move to step 2
+    document.getElementById('panel-1').classList.remove('active');
+    document.getElementById('panel-2').classList.add('active');
+    document.getElementById('si-1').classList.remove('active');
+    document.getElementById('si-1').classList.add('done');
+    document.getElementById('sn-1').textContent = '✓';
+    document.getElementById('si-2').classList.add('active');
+    errEl.classList.remove('show');
+  }
+
+  function goStep1() {
+    document.getElementById('panel-2').classList.remove('active');
+    document.getElementById('panel-1').classList.add('active');
+    document.getElementById('si-2').classList.remove('active');
+    document.getElementById('si-1').classList.remove('done');
+    document.getElementById('si-1').classList.add('active');
+    document.getElementById('sn-1').textContent = '1';
+    document.getElementById('err-banner').classList.remove('show');
+  }
+
+  function doSignup() {
+    const email   = document.getElementById('su-email').value.trim();
+    const pw      = document.getElementById('su-pw').value;
+    const pw2     = document.getElementById('su-pw2').value;
+    const consent = document.getElementById('su-consent').checked;
+    const errEl   = document.getElementById('err-banner');
+    const okEl    = document.getElementById('ok-banner');
+    errEl.classList.remove('show'); okEl.classList.remove('show');
+    if (!email) {
+      document.getElementById('err-msg').textContent = 'Please enter your email address.'; errEl.classList.add('show'); return;
+    }
+    if (pw.length < 8) {
+      document.getElementById('err-msg').textContent = 'Password must be at least 8 characters.'; errEl.classList.add('show'); return;
+    }
+    if (pw !== pw2) {
+      document.getElementById('err-msg').textContent = 'Passwords do not match.'; errEl.classList.add('show'); return;
+    }
+    if (!consent) {
+      document.getElementById('err-msg').textContent = 'Please accept the terms to continue.'; errEl.classList.add('show'); return;
+    }
+    const btn = document.getElementById('signup-btn');
+    btn.disabled = true; btn.textContent = 'Creating account…';
+    setTimeout(() => {
+      okEl.classList.add('show');
+      setTimeout(() => { window.location.href = 'GiveLife - Home Page.html'; }, 1200);
+    }, 1400);
+  }
+
+  function togglePw(id, btn) {
+    const el = document.getElementById(id);
+    el.type = el.type === 'password' ? 'text' : 'password';
+    btn.textContent = el.type === 'password' ? '👁' : '🙈';
+  }
+
+  function checkStrength(val) {
+    const segs = ['seg1','seg2','seg3','seg4'].map(id => document.getElementById(id));
+    const lbl  = document.getElementById('strength-label');
+    segs.forEach(s => s.className = 'strength-seg');
+    if (!val) { lbl.textContent = ''; return; }
+    let score = 0;
+    if (val.length >= 8) score++;
+    if (/[A-Z]/.test(val)) score++;
+    if (/[0-9]/.test(val)) score++;
+    if (/[^A-Za-z0-9]/.test(val)) score++;
+    const cls = score <= 1 ? 'weak' : score <= 2 ? 'fair' : 'strong';
+    for (let i = 0; i < score; i++) segs[i].classList.add(cls);
+    lbl.textContent = ['','Weak','Fair','Good','Strong'][score];
+    lbl.style.color = cls === 'weak' ? 'var(--rose)' : cls === 'fair' ? '#f59e0b' : 'var(--green)';
+  }
+</script>
+</body>
+</html>
